@@ -1,6 +1,6 @@
 export const Header = () => {
   return (
-    <header className="flex justify-between">
+    <header className="flex justify-between font-poppins">
       <div className="flex flex-col space-y-2">
         <h1 className="text-3xl font-bold">Hey, Name</h1>
         <div className="flex justify-between">
@@ -8,8 +8,7 @@ export const Header = () => {
           <h2 className="text-sm font-medium text-gray-500">12:00 pm</h2>
         </div>
       </div>
-      <div className="bg-sky-500 aspect-[1/1] w-11 h-fit rounded-full flex justify-center items-center">
-        profil
+      <div className="bg-ashGray2 aspect-[1/1] w-11 h-fit rounded-full flex justify-center items-center">
       </div>
     </header>
   )
