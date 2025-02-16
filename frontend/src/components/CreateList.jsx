@@ -1,7 +1,37 @@
+import React, { useState } from 'react';
+
 export const CreateList = ({ onClose }) => {
+  const [taskData, setTaskData] = useState({
+    title: '',
+    from: '',
+    to: '',
+    note: ''
+  });
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setTaskData(prevData => ({
+      ...prevData,
+      [id]: value
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your submit logic here
+
+    // Validasi waktu
+    if (taskData.from && taskData.to) {
+      const fromTime = new Date(`2023-01-01T${taskData.from}`);
+      const toTime = new Date(`2023-01-01T${taskData.to}`);
+
+      if (fromTime >= toTime) {
+        alert('Waktu "From" harus lebih awal dari waktu "To"');
+        return;
+      }
+    }
+
+    // Lakukan sesuatu dengan data tugas
+    console.log('Task Data:', taskData);
     onClose();
   };
 
@@ -24,10 +54,25 @@ export const CreateList = ({ onClose }) => {
           <h2 className="mb-10 text-2xl font-bold text-center text-hitam">Create your task</h2>
 
           {[
-            { id: 'title', label: 'Title', placeholder: 'Enter task title...' },
-            { id: 'from', label: 'From', placeholder: 'From time' },
-            { id: 'to', label: 'To', placeholder: 'To time' },
-          ].map(({ id, label, placeholder }) => (
+            {
+              id: 'title',
+              label: 'Title',
+              placeholder: 'Enter task title...',
+              type: 'text'
+            },
+            {
+              id: 'from',
+              label: 'From',
+              placeholder: 'Select start time',
+              type: 'time'
+            },
+            {
+              id: 'to',
+              label: 'To',
+              placeholder: 'Select end time',
+              type: 'time'
+            },
+          ].map(({ id, label, placeholder, type }) => (
             <div key={id} className="flex flex-col items-start mb-5 gap-y-1">
               <label
                 htmlFor={id}
@@ -37,9 +82,12 @@ export const CreateList = ({ onClose }) => {
               </label>
               <input
                 id={id}
-                type="text"
+                type={type}
+                value={taskData[id]}
+                onChange={handleInputChange}
                 className="w-full p-4 bg-ashGray1 border border-gray-200 rounded-lg outline-none text-sm"
                 placeholder={placeholder}
+                required={id === 'title'}
               />
             </div>
           ))}
@@ -53,6 +101,8 @@ export const CreateList = ({ onClose }) => {
             </label>
             <textarea
               id="note"
+              value={taskData.note}
+              onChange={handleInputChange}
               className="w-full p-4 bg-ashGray1 border border-gray-200 rounded-lg outline-none text-sm"
               placeholder="Note"
             />
