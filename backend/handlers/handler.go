@@ -106,3 +106,29 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 	task.ID = int(id)
 	json.NewEncoder(w).Encode(task)
 }
+
+func UpdateTask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	id, err := strconv.Atoi(params["id"])
+	if err != nil {
+		http.Error(w, "Invalid task", http.StatusBadRequest)
+		return
+	}
+
+	var task models.Task
+	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
+		http.Error(w, "Invalid task", http.StatusBadRequest)
+		return
+	}
+
+	query := "UPDATE task SET name_task = ?, from_time = ?, to_time = ?, content = ?, status = ? WHERE id = ?"
+	_, err = database.DB.Exec(query, task.Name_task, task.From_time, task.To_time, task.Content, task.Status, id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	task.ID = id
+	json.NewEncoder(w).Encode(task)
+}
