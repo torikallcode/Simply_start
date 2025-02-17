@@ -80,3 +80,29 @@ func GetTask(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(task)
 }
+
+func CreateTask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	var task models.Task
+	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
+		http.Error(w, "invalid task", http.StatusBadRequest)
+		return
+	}
+
+	query := "INSERT INTO task (name_task, from_time, to_time, content, status) VALUE (?, ?, ?, ?, ?)"
+	result, err := database.DB.Exec(query, task.Name_task, task.From_time, task.To_time, task.Content, task.Status)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	task.ID = int(id)
+	json.NewEncoder(w).Encode(task)
+}
