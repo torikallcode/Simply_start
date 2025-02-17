@@ -16,7 +16,7 @@ func main() {
 	routers := routers.SetupRouter()
 
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"http:localhost:5173"},
+		AllowedOrigins: []string{"http://localhost:5173"},
 		AllowedMethods: []string{"GET", "OPTIONS"},
 		AllowedHeaders: []string{"Contet-Type", "Authorization"},
 		Debug:          true,
