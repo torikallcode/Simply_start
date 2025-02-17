@@ -9,7 +9,8 @@ import (
 func SetupRouter() *mux.Router {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/home", handlers.GetAllTime).Methods("GET")
+	router.HandleFunc("/time", handlers.GetAllTime).Methods("GET")
+	router.HandleFunc("/task", handlers.GetAllTask).Methods("GET")
 
 	return router
 
