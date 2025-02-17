@@ -132,3 +132,28 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 	task.ID = id
 	json.NewEncoder(w).Encode(task)
 }
+
+func DeleteTask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-Type", "application/json")
+	params := mux.Vars(r)
+	id, err := strconv.Atoi(params["id"])
+	if err != nil {
+		http.Error(w, "invalid task", http.StatusBadRequest)
+		return
+	}
+
+	query := "DELETE FROM task WHERE id = ?"
+	result, err := database.DB.Exec(query, id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		http.Error(w, "task not found", http.StatusNotFound)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}
