@@ -17,7 +17,7 @@ func main() {
 
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"http://localhost:5173"},
-		AllowedMethods: []string{"GET", "OPTIONS"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
 		AllowedHeaders: []string{"Contet-Type", "Authorization"},
 		Debug:          true,
 	})
