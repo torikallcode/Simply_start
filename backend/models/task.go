@@ -5,4 +5,6 @@ type Task struct {
 	Name_task string `json:"name_task"`
 	From_time string `json:"from_time"`
 	To_time   string `json:"to_time"`
+	Content   string `json:"content"`
+	Status    bool   `json:"status"`
 }
