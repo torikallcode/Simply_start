@@ -15,11 +15,13 @@ func main() {
 
 	routers := routers.SetupRouter()
 
+	// Gunakan konfigurasi CORS yang lebih spesifik
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:5173"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
-		AllowedHeaders: []string{"Contet-Type", "Authorization"},
-		Debug:          true,
+		AllowedOrigins:   []string{"http://localhost:5173"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+		Debug:            true,
 	})
 
 	handler := c.Handler(routers)
