@@ -163,7 +163,7 @@ func UpdateTaskStatus(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
-		http.Error(w, "invalid task", http.StatusBadRequest)
+		http.Error(w, "invalid list", http.StatusBadRequest)
 		return
 	}
 
@@ -176,17 +176,17 @@ func UpdateTaskStatus(w http.ResponseWriter, r *http.Request) {
 
 	rowsAffected, _ := result.RowsAffected()
 	if rowsAffected == 0 {
-		http.Error(w, "task not found", http.StatusNotFound)
+		http.Error(w, "list not found", http.StatusNotFound)
 		return
 	}
 
-	var newStatus models.Task
-	statusQuery := "SELECT status FROM task WHERE id = ?"
-	err = database.DB.QueryRow(statusQuery, id).Scan(&newStatus)
+	var UpdateTask models.Task
+	selectQuery := "SELECT id, name_task, from_time, to_time, content, status FROM task WHERE id = ?"
+	err = database.DB.QueryRow(selectQuery, id).Scan(&UpdateTask.ID, &UpdateTask.Name_task, &UpdateTask.From_time, &UpdateTask.To_time, &UpdateTask.Content, &UpdateTask.Status)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	json.NewEncoder(w).Encode(newStatus)
+	json.NewEncoder(w).Encode(UpdateTask)
 }
