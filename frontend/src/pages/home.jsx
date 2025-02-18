@@ -26,7 +26,7 @@ export const Home = () => {
           className={"mb-11"}
         />
         <button
-          className="bg-ashGray1 border border-gray-200 rounded-lg py-1 text-hitam px-5 font-poppins text-center text-3xl mb-3"
+          className="bg-ashGray1 border border-gray-200 cursor-pointer rounded-lg py-1 text-hitam px-5 font-poppins text-center text-3xl mb-3"
           onClick={handleOpenModal}>+
         </button>
         {isModalOpen && (
