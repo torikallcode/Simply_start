@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { EditTaskModal } from './EditTaskModal';
+import { Link } from 'react-router-dom';
+import { Select } from './Select';
 
 export const CardList = ({ onDelete }) => {
   const [tasks, setTasks] = useState(null);
@@ -54,7 +56,11 @@ export const CardList = ({ onDelete }) => {
   };
 
   // Handle toggle status
-  const handleToggleStatus = async (taskId) => {
+  const handleToggleStatus = async (taskId, event) => {
+    // Mencegah event bawaan dan navigasi
+    event.preventDefault();
+    event.stopPropagation();
+
     try {
       const response = await axios.patch(`http://localhost:8080/task/${taskId}/status`);
 
@@ -68,8 +74,15 @@ export const CardList = ({ onDelete }) => {
       );
     } catch (error) {
       console.error('Error toggling status', error);
-      // Optional: Tambahkan toast atau notifikasi error
     }
+  };
+
+  // Handle edit icon click
+  const handleEditClick = (task, event) => {
+    // Mencegah event bawaan dan navigasi
+    event.preventDefault();
+    event.stopPropagation();
+    setSelectedTask(task);
   };
 
   // Kondisi loading
@@ -101,19 +114,26 @@ export const CardList = ({ onDelete }) => {
     );
   }
 
+  const handleSelectClick = (e) => {
+    // Mencegah link dari berpindah halaman
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   // Render tasks
   return (
     <>
       <div>
         {tasks.map((task) => (
-          <a
+          <Link
+            to={`/detail/${task.id}`}
             key={task.id}
             href="#"
             onDoubleClick={() => handleDoubleClick(task.id)}
-            className="relative block overflow-hidden rounded-lg border border-gray-100 p-4 sm:p-6 lg:p-8 bg-ashGray1 font-poppins mb-4"
+            className="relative block overflow-hidden rounded-lg border border-gray-100 p-4 sm:p-6 lg:p-8 bg-ashGray1 font-poppins mb-4 shadow-sm"
           >
             <span
-              className="absolute inset-x-0 bottom-0 h-2 bg-emerald-500/50"
+              className="absolute inset-x-0 bottom-0 h-2 "
             ></span>
 
             <div className="flex justify-between sm:gap-4">
@@ -121,11 +141,18 @@ export const CardList = ({ onDelete }) => {
                 {task.name_task}
               </h3>
               <svg
-                onClick={() => handleEditTask(task)}
+                onClick={(e) => handleEditClick(task, e)}
                 width={24}
                 height={24}
                 className="cursor-pointer"
-                viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20.1497 7.93997L8.27971 19.81C7.21971 20.88 4.04971 21.3699 3.27971 20.6599C2.50971 19.9499 3.06969 16.78 4.12969 15.71L15.9997 3.84C16.5478 3.31801 17.2783 3.03097 18.0351 3.04019C18.7919 3.04942 19.5151 3.35418 20.0503 3.88938C20.5855 4.42457 20.8903 5.14781 20.8995 5.90463C20.9088 6.66146 20.6217 7.39189 20.0997 7.93997H20.1497Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M21 21H12" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path d="M20.1497 7.93997L8.27971 19.81C7.21971 20.88 4.04971 21.3699 3.27971 20.6599C2.50971 19.9499 3.06969 16.78 4.12969 15.71L15.9997 3.84C16.5478 3.31801 17.2783 3.03097 18.0351 3.04019C18.7919 3.04942 19.5151 3.35418 20.0503 3.88938C20.5855 4.42457 20.8903 5.14781 20.8995 5.90463C20.9088 6.66146 20.6217 7.39189 20.0997 7.93997H20.1497Z" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+                  <path d="M21 21H12" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+                </g>
+              </svg>
             </div>
 
             <div className="mt-4 flex gap-4 sm:gap-6 w-full justify-between">
@@ -135,18 +162,16 @@ export const CardList = ({ onDelete }) => {
                 <h2 className="text-sm font-medium text-gray-600">{task.to_time}</h2>
               </div>
 
-              <div className="flex flex-col-reverse">
-                <label className="cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={task.status}
-                    onChange={() => handleToggleStatus(task.id)}
-                    className="form-checkbox h-5 w-5 text-green-500"
-                  />
-                </label>
+              <div className="flex flex-col-reverse" onClick={handleSelectClick}>
+                <Select
+                  onValueChange={(value) => {
+                    // Handle select value change
+                    console.log(value);
+                  }}
+                />
               </div>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
 
