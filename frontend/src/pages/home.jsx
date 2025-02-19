@@ -17,7 +17,7 @@ export const Home = () => {
   };
 
   return (
-    <div className="p-3">
+    <div className="p-3 relative min-h-screen">
       <div className="mb-5 max-w-sm mx-auto">
         <Header />
       </div>
@@ -26,7 +26,7 @@ export const Home = () => {
           className={"mb-11"}
         />
         <button
-          className="bg-ashGray1 border border-gray-200 cursor-pointer rounded-lg py-1 text-hitam px-5 font-poppins text-center text-3xl mb-3"
+          className="bg-ashGray2 border absolute bottom-3 left-0 right-0 w-fit mx-auto border-gray-200 cursor-pointer rounded-full aspect-[1/1] py-1 text-ashGray1 px-5 font-poppins text-center text-3xl mb-3"
           onClick={handleOpenModal}>+
         </button>
         {isModalOpen && (
